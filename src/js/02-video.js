@@ -13,8 +13,8 @@ player.getVideoTitle().then(function (title) {
 });
 
 function saveCurrentTime(e) {
-  localStorage.setItem('videoplayer-current-time', e.seconds);
-  console.log(`videoplayer-current-time: ${localStorage.getItem('videoplayer-current-time')}`);
+  localStorage.setItem('videoplayer-current-time', Math.round(e.seconds));
+  console.log(`videoplayer-current-time: ${localStorage.getItem('videoplayer-current-time')}s`);
 }
 
 player.on('timeupdate', throttle(saveCurrentTime, 1000));
