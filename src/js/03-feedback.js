@@ -1,10 +1,9 @@
 // Import lodash.throttle library
-const { lastIndexOf } = require('lodash');
-let throttle = require('lodash.throttle')
+const _ = require('lodash');
 
 const feedbackForm = document.querySelector('.feedback-form');
 
-feedbackForm.addEventListener('input', currentFormValues);
+feedbackForm.addEventListener('input', _.throttle(updateLocalStorage, 3000, {'trailing': false}));
 
 feedbackForm.addEventListener("submit", submitForm)
 
@@ -16,17 +15,15 @@ function currentFormValues(e) {
   const {
     elements: { email, message },
   } = e.currentTarget;
-  console.log(
-    `Emailform: ${email.value}, 
-    Messageform: ${message.value}`,
-  );
-  // localStorage.setItem("feedback-form-state", "JSONsss");
-  // console.log(localStorage.getItem("feedback-form-state"))
+  // console.log(
+  //   `Email: ${email.value}, 
+  //   Message: ${message.value}`,
+  // );
   formValues.email = email.value;
   formValues.message = message.value
+
+  return formValues
   // console.log(formValues)
-  localStorage.setItem("feedback-form-state", JSON.stringify(formValues));
-  // console.log(localStorage.getItem("feedback-form-state"))   
 }
 
 function loadFormValues(){
@@ -42,8 +39,12 @@ function loadFormValues(){
 
 function submitForm(e){
   e.preventDefault();
-  console.log(JSON.parse(localStorage.getItem("feedback-form-state"))); 
+  console.log(currentFormValues(e)); 
   localStorage.removeItem("feedback-form-state")
   feedbackForm.reset();
 }
 
+function updateLocalStorage(e){
+  localStorage.setItem("feedback-form-state", JSON.stringify(currentFormValues(e)));
+  console.log("upgrade storage")
+}
